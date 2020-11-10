@@ -68,18 +68,3 @@ def calculate_observables(ds: torch.utils.data.Dataset) -> Tuple[np.ndarray, np.
             magnetization[i, j] = np.mean(batch)
             staggered_magnetization[i, j] = np.mean(get_staggered_magnetization(batch))
     return magnetization, staggered_magnetization
-
-
-if __name__ == '__main__':
-    import matplotlib.pyplot as plt
-    x = np.linspace(-2, 2, 5)
-    y = np.linspace(-2, 2, 2)
-
-    fig = plt.figure()
-    ax = plt.axes(projection='3d')
-
-    X, Y = np.meshgrid(x, y)
-    Z = gaussian(X) * gaussian(Y)
-
-    ax.plot_wireframe(X, Y, Z, color='green')
-    plt.show()

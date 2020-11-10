@@ -7,29 +7,33 @@ from typing import Tuple
 import utils.plot as c_plt
 
 
-def train(model: nn.Module, loader: torch.utils.data.DataLoader,
-          learning_rate=1e-3, loss_function=nn.MSELoss(), break_after_fraction=1):
+def train(model: nn.Module, ds: torch.utils.data.Dataset,
+          learning_rate=1e-3, loss_function=nn.MSELoss(), break_after_fraction=1, epochs=1):
 
+    loader = torch.utils.data.DataLoader(ds, batch_size=32, shuffle=True)
     model.train()
     n_batches = loader.__len__()
     print(f'Number of batches: {n_batches}.')
-    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=0)
+    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=0.0)
 
-    train_loss = []
-    for i, sample in enumerate(loader):
-        optimizer.zero_grad()
-        output = model(sample['configuration'])
-        loss = loss_function(torch.squeeze(output), torch.squeeze(sample['label']))
-        loss.backward()
-        optimizer.step()
-        train_loss.append(loss.item())
-        if i % 25 == 0 and i != 0:
-            print(f"i = {i}, loss = {np.mean(train_loss[-25:]):.5F}")
-        if i > np.floor(n_batches * break_after_fraction):
-            print('Finished training earlier')
-            break
-    print(f"for the whole epoch loss = {np.mean(train_loss):.5F}")
-    return np.mean(train_loss)
+    loss_epoch = []
+    for epoch in range(epochs):
+        train_loss = []
+        for i, sample in enumerate(loader):
+            optimizer.zero_grad()
+            output = model(sample['configuration'])
+            loss = loss_function(torch.squeeze(output), torch.squeeze(sample['label']))
+            loss.backward()
+            optimizer.step()
+            train_loss.append(loss.item())
+            if i % 25 == 0 and i != 0:
+                print(f"i = {i}, loss = {np.mean(train_loss[-25:]):.5F}")
+            if i > np.floor(n_batches * break_after_fraction):
+                print('Finished training earlier')
+                break
+        print(f"for the whole epoch = {epoch}        loss = {np.mean(train_loss):.5F}\n")
+        loss_epoch.append(np.mean(train_loss))
+    return loss_epoch
 
 
 def measure_performance(model: nn.Module, ds: torch.utils.data.Dataset) -> Tuple[np.arange, np.array]:

@@ -6,13 +6,13 @@ import importlib
 from CustomClasses import dataset, models, regression
 import CustomClasses.utils.utils_functions as utils_functions
 import CustomClasses.utils.lrp_analysis as lrp_analysis
+import CustomClasses.utils.plot as c_plt
 
 if __name__ == '__main__':
     root_dir = './Data/'
-    M = 5.
-    g = np.arange(0.1, 2, 0.1)
-    kappa = np.arange(-0.2, 0.19, 0.02)
-    batch_size = 32
+    M = 5
+    g = np.arange(0., 2, 0.1)
+    kappa = np.arange(-0.3, 0.27, 0.02)
 
     # ds = dataset.YukawaDataset
     ds = dataset.YukawaDatasetClassification
@@ -20,16 +20,9 @@ if __name__ == '__main__':
     train_ds = ds(root_dir, kappa, g, M)
     test_ds = ds(root_dir, kappa, g, M, load_test=True)
 
-    train_loader = torch.utils.data.DataLoader(train_ds, batch_size=batch_size, shuffle=True)
-
     cnn = models.CNN_Classification(train_ds.out_shape)
 
-    loss = []
-    for i in range(5):
-        print(f'epoch = {i}')
-        temp = regression.train(cnn, train_loader, learning_rate=1e-3, break_after_fraction=1.)
-        loss.append(temp)
-
+    loss = regression.train(cnn, train_ds, learning_rate=1e-3, break_after_fraction=0.1, epochs=0)
 
     cnn.eval()
     with torch.no_grad():
@@ -41,8 +34,8 @@ if __name__ == '__main__':
         regression.visualize_performance(cnn, test_ds)
         regression.visualize_performance(cnn, train_ds)
 
+        dataset.plot_dataset(train_ds)
 
-        dataset.plot_dataset(test_ds)
-        # plt.show()
+    # lrp_analysis.plot_importance(cnn2, test_ds, batch_size=24)
+    # c_plt.all_filter3d(cnn2)
 
-    # lrp_analysis.plot_importance(cnn, test_ds)

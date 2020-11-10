@@ -98,6 +98,7 @@ class NextConv3d(CustomConv3d):
         Z = pself.forward(x)
         shape = Z.shape
 
+        R = R.view(shape)
         S = R.squeeze().clone().detach() / (Z.squeeze() + 1e-9)
 
         Z.backward(S.view(shape))
