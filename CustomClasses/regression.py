@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from typing import Tuple
 
-import utils.plot as c_plt
+import CustomClasses.utils.plot as c_plt
 
 
 def train(model: nn.Module, ds: torch.utils.data.Dataset,

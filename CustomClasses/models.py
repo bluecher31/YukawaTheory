@@ -3,8 +3,8 @@ import torch.nn as nn
 import numpy as np
 from typing import List
 
-import utils.lrp_architecture as lrp
-from utils.self_attention import SelfAttention, SimpleSelfAttention
+import CustomClasses.utils.lrp_architecture as lrp
+from CustomClasses.utils.self_attention import SelfAttention, SimpleSelfAttention
 
 # base class used for all lrp models.
 # additionally a forward pass and corresponding self.layers list needs to be initialised.

@@ -6,8 +6,8 @@ import matplotlib.pyplot as plt
 import pickle   # potentially also use joblib or cPickle(_pickle)
 from typing import List, Dict, Tuple
 
-import utils.utils_functions as utils_functions
-import utils.plot as c_plt
+import CustomClasses.utils.utils_functions as utils_functions
+import CustomClasses.utils.plot as c_plt
 
 Tensor = torch.Tensor
 Array = np.ndarray

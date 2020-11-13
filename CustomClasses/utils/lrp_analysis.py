@@ -3,8 +3,8 @@ import matplotlib.pyplot as plt
 import torch
 from typing import Tuple, List
 
-import utils_functions
-import plot as c_plt
+import CustomClasses.utils.utils_functions as utils
+import CustomClasses.utils.plot as c_plt
 
 
 def set_up_model(model: torch.nn.Module, ds: torch.utils.data.Dataset, kappa: float, g: float, batch_size: int):
@@ -63,7 +63,7 @@ def get_filter_importance(model: torch.nn.Module, layer_number: int, batch_size:
     # use jackknife to to statistics over batch
     filter_importance = np.zeros((2, conv.out_channels))
     for i in range(conv.out_channels):
-        filter_importance[0, i], filter_importance[1, i] = utils_functions.jackknife(filter_importance_batch[i])
+        filter_importance[0, i], filter_importance[1, i] = utils.jackknife(filter_importance_batch[i])
     filter_importance /= filter_importance[0].sum()     # normalize importance to unity
     return filter_importance
 
